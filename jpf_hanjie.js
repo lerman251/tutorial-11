@@ -60,43 +60,113 @@ var puzzleCells;
 var cellBackground;
 
 function init() {
-    document.getElementById("puzzleTitle").innerHTML = "Puzzle 1";
-    document.getElementById("puzzle").innerHTML = drawPuzzle(puzzle1Hint, puzzle1Rating, puzzle1);
-    var puzzleButtons = document.getElementsByClassName("puzzles");
-    for (var i = 0; i < puzzleButtons.length; i++) {
-      puzzleButtons[i].onclick = swapPuzzle;
-    }
-    setupPuzzle();
-}
-function swapPuzzle(e) {
-   var puzzleID = e.target.id;
-
-   var puzzleTitle = e.target.value;
-   document.getElementById("puzzleTitle").innerHTML = puzzleTitle;
-
-   switch (puzzleID) {
-   case "puzzle1":
-      document.getElementById("puzzle").innerHTML = drawPuzzle(puzzle1Hint, puzzle1Rating, puzzle1);
-      break;
-   case "puzzle2":
-      document.getElementById("puzzle").innerHTML = drawPuzzle(puzzle2Hint, puzzle2Rating, puzzle2);
-      break;
-   case "puzzle3":
-      document.getElementById("puzzle").innerHTML = drawPuzzle(puzzle3Hint, puzzle3Rating, puzzle3);
-      break;
+   document.getElementById("puzzleTitle").innerHTML = "Puzzle 1";
+   document.getElementById("puzzle").innerHTML = drawPuzzle(puzzle1Hint, puzzle1Rating, puzzle1);
+   var puzzleButtons = document.getElementsByClassName("puzzles");
+   for (var i = 0; i < puzzleButtons.length; i++) {
+     puzzleButtons[i].onclick = swapPuzzle;
    }
    setupPuzzle();
+   document.addEventListener("mouseup", endBackground)
+   document.getElementById("solve").addEventListener("click",
+      function() {
+         for (var i = 0; i < puzzleCells.length; i++) {
+            puzzleCells[i].style.backgroundColor = "";
+         }
+      }
+   )
+}
+function swapPuzzle(e) {
+   if (confirm("You will lose all of your work on the puzzle! Continue?")) {
+      var puzzleID = e.target.id;
+
+      var puzzleTitle = e.target.value;
+      document.getElementById("puzzleTitle").innerHTML = puzzleTitle;
+
+      switch (puzzleID) {
+      case "puzzle1":
+         document.getElementById("puzzle").innerHTML = drawPuzzle(puzzle1Hint, puzzle1Rating, puzzle1);
+         break;
+      case "puzzle2":
+         document.getElementById("puzzle").innerHTML = drawPuzzle(puzzle2Hint, puzzle2Rating, puzzle2);
+         break;
+      case "puzzle3":
+         document.getElementById("puzzle").innerHTML = drawPuzzle(puzzle3Hint, puzzle3Rating, puzzle3);
+         break;
+      }
+      setupPuzzle();
+   }
 }
 function setupPuzzle() {
    puzzleCells = document.querySelectorAll ("table#hanjieGrid td");
 
    for (var i = 0; i < puzzleCells.length; i++) {
       puzzleCells[i].style.backgroundColor = "rgb(233, 207, 29)";
+      puzzleCells[i].onmousedown = setBackground;
+      puzzleCells[i].style.cursor = "url(jpf_pencil.png), pointer";
+   }
+   document.getElementById("hanjieGrid").addEventListener("mouseup",
+      function() {
+
+      });
+   var filled = document.querySelectorAll("table#hanjieGrid td.filled");
+   var empty = document.querySelectorAll("table#hanjieGrid td.empty");
+   document.getElementById("peek").addEventListener("click",
+      function() {
+            for (var i = 0; i < filled.length; i++) {
+               if (filled[i].style.backgroundColor === "rgb(255, 255, 255)"){
+                  filled[i].style.backgroundColor = "rgb(255, 211, 211)";
+               }
+            }
+            for (var i = 0; i < empty.length; i++) {
+               if (empty[i].style.backgroundColor === "rgb(101, 101, 101)"){
+                  empty[i].style.backgroundColor = "rgb(255, 101, 101)";
+               }
+            }
+            setTimeout(
+               function() {
+                  for (var i = 0; i < puzzleCells.length; i++) {
+                     if (puzzleCells[i].style.backgroundColor === "rgb(255, 211, 211)") {
+                        puzzleCells[i].style.backgroundColor = "rgb(255, 255, 255)";
+                     }
+                     if (puzzleCells[i].style.backgroundColor === "rgb(255, 101, 101)") {
+                        puzzleCells[i].style.backgroundColor = "rgb(101, 101, 101)";
+                     }
+                  }
+               }, 500);
+            )
+         }
+   );
+}
+function setBackground(e) {
+   var cursorType;
+   if (e.shiftKey) {
+      cellBackground = "rgb(233, 207, 29)";
+      cursorType = "url(jpf_eraser.png), cell";
+   } else if (e.altKey) {
+      cellBackground = "rgb(255, 255, 255)";
+      cursorType = "url(jpf_cross.png), crosshair";
+   } else {
+      cellBackground = "rgb(101, 101, 101)";
+      cursorType = "url(jpf_pencil.png), pointer";
+   }
+   e.target.style.backgroundColor = cellBackground;
+   for (var i = 0; i < puzzleCells.length; i++) {
+      puzzleCells[i].addEventListener("mouseenter", extendBackground);
+      puzzleCells[i].style.cursor = cursorType;
+   }
+   e.preventDefualt()
+}
+function extendBackground(e) {
+   e.target.style.backgroundColor = cellBackground;
+}
+function endBackground() {
+   for (var i = 0 ; i < puzzleCells.length; i++) {
+      puzzle[i].removeEventsListener("mouseenter", extendBackground);
+      puzzleCells[i].style.cursor = "url(jpf_pencil.png), pointer";
    }
 }
 
-
-         
 /* ================================================================= */
 
 function drawPuzzle(hint, rating, puzzle) {
