@@ -165,6 +165,23 @@ function endBackground() {
       puzzle[i].removeEventsListener("mouseenter", extendBackground);
       puzzleCells[i].style.cursor = "url(jpf_pencil.png), pointer";
    }
+   document.getElementById("hanjieGrid").addEventListener("mouseup",
+   function() {
+      var solved = true;
+      for (var i = 0; i< puzzleCells.length; i++) {
+      if ((puzzleCells[i].className === "filled" &&
+      puzzleCells[i].style.backgroundColor !== "rgb(101, 101, 101)")
+   ||
+(puzzleCells[i].className === "empty" &&
+      puzzleCells[i].style.backgroundColor === "rgb(101, 101, 101)") {
+      solved = false;
+      break;
+      }
+   }
+   if (solved) alert("You Solved the Puzzle"); 
+   }
+ );
+
 }
 
 /* ================================================================= */
