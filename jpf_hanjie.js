@@ -113,29 +113,28 @@ function setupPuzzle() {
    var empty = document.querySelectorAll("table#hanjieGrid td.empty");
    document.getElementById("peek").addEventListener("click",
       function() {
-            for (var i = 0; i < filled.length; i++) {
-               if (filled[i].style.backgroundColor === "rgb(255, 255, 255)"){
-                  filled[i].style.backgroundColor = "rgb(255, 211, 211)";
-               }
+         for (var i = 0; i < filled.length; i++) {
+            if (filled[i].style.backgroundColor === "rgb(255, 255, 255)"){
+               filled[i].style.backgroundColor = "rgb(255, 211, 211)";
             }
-            for (var i = 0; i < empty.length; i++) {
-               if (empty[i].style.backgroundColor === "rgb(101, 101, 101)"){
-                  empty[i].style.backgroundColor = "rgb(255, 101, 101)";
-               }
-            }
-            setTimeout(
-               function() {
-                  for (var i = 0; i < puzzleCells.length; i++) {
-                     if (puzzleCells[i].style.backgroundColor === "rgb(255, 211, 211)") {
-                        puzzleCells[i].style.backgroundColor = "rgb(255, 255, 255)";
-                     }
-                     if (puzzleCells[i].style.backgroundColor === "rgb(255, 101, 101)") {
-                        puzzleCells[i].style.backgroundColor = "rgb(101, 101, 101)";
-                     }
-                  }
-               }, 500);
-            )
          }
+         for (var i = 0; i < empty.length; i++) {
+            if (empty[i].style.backgroundColor === "rgb(101, 101, 101)"){
+               empty[i].style.backgroundColor = "rgb(255, 101, 101)";
+            }
+         }
+         setTimeout(
+            function() {
+               for (var i = 0; i < puzzleCells.length; i++) {
+                  if (puzzleCells[i].style.backgroundColor === "rgb(255, 211, 211)") {
+                     puzzleCells[i].style.backgroundColor = "rgb(255, 255, 255)";
+                  }
+                  if (puzzleCells[i].style.backgroundColor === "rgb(255, 101, 101)") {
+                     puzzleCells[i].style.backgroundColor = "rgb(101, 101, 101)";
+                  }
+               }
+            }, 500);
+      }
    );
 }
 function setBackground(e) {
@@ -166,22 +165,21 @@ function endBackground() {
       puzzleCells[i].style.cursor = "url(jpf_pencil.png), pointer";
    }
    document.getElementById("hanjieGrid").addEventListener("mouseup",
-   function() {
-      var solved = true;
-      for (var i = 0; i< puzzleCells.length; i++) {
-      if ((puzzleCells[i].className === "filled" &&
-      puzzleCells[i].style.backgroundColor !== "rgb(101, 101, 101)")
-   ||
-(puzzleCells[i].className === "empty" &&
-      puzzleCells[i].style.backgroundColor === "rgb(101, 101, 101)") {
-      solved = false;
-      break;
+      function() {
+         var solved = true;
+         for (var i = 0; i< puzzleCells.length; i++) {
+            if ((puzzleCells[i].className === "filled" &&
+                 puzzleCells[i].style.backgroundColor !== "rgb(101, 101, 101)")
+               ||
+               (puzzleCells[i].className === "empty" &&
+                puzzleCells[i].style.backgroundColor === "rgb(101, 101, 101)")) {
+                  solved = false;
+                  break;
+            }
+         }
+         if (solved) alert("You Solved the Puzzle"); 
       }
-   }
-   if (solved) alert("You Solved the Puzzle"); 
-   }
- );
-
+   );
 }
 
 /* ================================================================= */
